@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#8b5cf6">
+  <meta name="description" content="SZLYANA — your personal study and learning space.">
+  <title>SZLYANA | Study Space</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.8.0/mammoth.browser.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#" data-page="dashboard"><span class="brand-mark">SJ</span><span>SZLYANA<small>your study space</small></span></a>
+      <div class="side-label">WORKSPACE</div>
+      <nav class="nav">
+        <button class="nav-link active" data-page="dashboard"><span>⌂</span> Dashboard</button>
+        <button class="nav-link" data-page="library"><span>▤</span> Study library</button>
+        <button class="nav-link" data-page="flashcards"><span>▣</span> Flashcards</button>
+        <button class="nav-link" data-page="quizzes"><span>✎</span> Quiz & mock exam</button>
+        <button class="nav-link" data-page="reviewers"><span>▧</span> Reviewers</button>
+        <button class="nav-link" data-page="assistant"><span>⌕</span> Study assistant</button>
+        <button class="nav-link" data-page="planner"><span>▦</span> Study planner</button>
+        <button class="nav-link" data-page="subjects"><span>◈</span> Subjects</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="storage-note"><span class="dot"></span><div><b>Private by design</b><small>Your files stay in this browser.</small></div></div>
+        <button class="nav-link" id="themeToggle"><span>☾</span> Toggle appearance</button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <button class="icon-btn mobile-menu" id="menuToggle" aria-label="Open menu">☰</button>
+        <div class="crumb">My workspace <span>/</span> <b id="pageName">Dashboard</b></div>
+        <div class="top-actions"><span class="today" id="todayLabel"></span><button class="theme-top-btn" id="themeToggleTop" type="button" aria-label="Switch to dark mode" title="Toggle dark mode">☾ <span>Dark mode</span></button><button class="avatar" title="SZLYANA">SJ</button></div>
+      </header>
+
+      <section class="page active" id="page-dashboard">
+        <div class="hero">
+          <div><div class="eyebrow">YOUR PERSONAL STUDY SPACE</div><h1>Make today <em>count.</em> ✨</h1><p>Small steps every day add up to big achievements.</p></div>
+          <button class="btn btn-light" data-go="library">＋ Add study material</button>
+          <div class="hero-orb orb-one"></div><div class="hero-orb orb-two"></div>
+        </div>
+        <div class="stats-grid">
+          <article class="stat-card"><div class="stat-icon purple">▤</div><span>Study materials</span><strong id="statMaterials">0</strong><small>Saved in your library</small></article>
+          <article class="stat-card"><div class="stat-icon pink">▣</div><span>Flashcards</span><strong id="statCards">0</strong><small>Ready to review</small></article>
+          <article class="stat-card"><div class="stat-icon blue">✎</div><span>Quizzes completed</span><strong id="statQuizzes">0</strong><small>Practice makes progress</small></article>
+          <article class="stat-card"><div class="stat-icon peach">◷</div><span>Study sessions</span><strong id="statSessions">0</strong><small>Marked as completed</small></article>
+        </div>
+        <div class="content-grid">
+          <article class="panel progress-panel"><div class="panel-heading"><div><h2>Your study progress</h2><p>A snapshot of your learning activity</p></div><span class="pill">All time</span></div><div class="progress-layout"><div class="progress-ring" id="progressRing"><div><strong id="progressPercent">0%</strong><small>completed tasks</small></div></div><div class="progress-legend"><div><i class="legend-dot purple-bg"></i><span>Completed sessions</span><b id="completedCount">0</b></div><div><i class="legend-dot pink-bg"></i><span>Pending sessions</span><b id="pendingCount">0</b></div><div><i class="legend-dot gray-bg"></i><span>Quiz attempts</span><b id="quizCount">0</b></div></div></div></article>
+          <article class="panel"><div class="panel-heading"><div><h2>Quick study tools</h2><p>Pick up where you left off</p></div></div><div class="quick-grid"><button class="quick-item" data-go="flashcards"><span class="quick-icon pink">▣</span><b>Flashcards</b><small>Review complete Q&A cards</small></button><button class="quick-item" data-go="quizzes"><span class="quick-icon purple">✎</span><b>Take a quiz</b><small>Test what you know</small></button><button class="quick-item" data-go="reviewers"><span class="quick-icon peach">▧</span><b>Make a reviewer</b><small>Organize your notes</small></button><button class="quick-item" data-go="planner"><span class="quick-icon blue">▦</span><b>Plan a session</b><small>Stay on track</small></button></div></article>
+        </div>
+        <div class="content-grid lower-grid">
+          <article class="panel"><div class="panel-heading"><div><h2>Recent materials</h2><p>Your latest uploads and notes</p></div><button class="text-btn" data-go="library">View library →</button></div><div id="recentMaterials" class="empty-state compact"><span>✧</span><b>Your library is waiting</b><p>Upload notes or paste text to get started.</p></div></article>
+          <article class="panel"><div class="panel-heading"><div><h2>Upcoming study sessions</h2><p>What’s on your schedule</p></div><button class="text-btn" data-go="planner">Open planner →</button></div><div id="upcomingSessions" class="empty-state compact"><span>♡</span><b>No sessions yet</b><p>Add a study session to your planner.</p></div></article>
+        </div>
+      </section>
+
+      <section class="page" id="page-library">
+        <div class="page-intro"><div><div class="eyebrow">YOUR KNOWLEDGE, IN ONE PLACE</div><h1>Study library</h1><p>Upload notes, organize resources, and turn your materials into study tools.</p></div><button class="btn" id="openPaste">＋ Paste text</button></div>
+        <div class="upload-classification panel" aria-label="Choose course and subject before uploading">
+          <div class="upload-classification-heading"><b>Organize this material</b><small>Select the course category and exact subject before choosing or dropping files.</small></div>
+          <div class="form-grid upload-subject-grid">
+            <label>Course category<select id="uploadCategory" required><option value="">Choose category…</option><option value="MEDTECH">MEDTECH</option><option value="IT">IT</option></select></label>
+            <label>Subject<select id="uploadSubject" required disabled><option value="">Choose a category first…</option></select></label>
+          </div>
+        </div>
+        <label class="auto-package-toggle"><input type="checkbox" id="autoGeneratePackage" checked> <span><b>Automatically generate a study package after upload</b><small>Creates a Natural Reviewer, quiz, and flashcards. Extracted text is sent to your configured AI provider and may incur API usage charges.</small></span></label>
+        <div class="upload-zone" id="dropZone"><div class="upload-symbol">↑</div><h3>Drop your study files here</h3><p>or <label for="fileInput" class="inline-link">browse files</label> from your device</p><small>PDF, DOCX, PPTX, TXT, CSV, XLSX, JPG, PNG, WEBP · Up to 10 files, 1 GB each</small><input id="fileInput" class="visually-hidden" type="file" multiple accept=".pdf,.docx,.pptx,.txt,.csv,.xlsx,.jpg,.jpeg,.png,.webp"></div>
+        <div class="processing hidden" id="processing"><div class="processing-copy"><b id="processingTitle">Processing your file…</b><small id="processingDetail">Please keep this tab open.</small></div><span id="processingPercent">0%</span><div class="processing-track" role="progressbar" aria-label="File processing progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="processingBar"></i></div></div>
+        <div class="toolbar"><div class="searchbox"><span>⌕</span><input id="materialSearch" placeholder="Search your materials…"></div><select id="subjectFilter"><option value="">All subjects</option></select><span class="muted" id="materialCount">0 materials</span></div>
+        <div class="material-grid" id="materialGrid"><div class="empty-state"><span>▤</span><b>No materials yet</b><p>Upload a document or paste your notes to begin.</p></div></div>
+      </section>
+
+      <section class="page" id="page-flashcards">
+        <div class="page-intro"><div><div class="eyebrow">ACTIVE RECALL</div><h1>Flashcards</h1><p>Generate question-and-answer cards from your study material and review the key facts.</p></div><button class="btn" id="createCardBtn">＋ Create flashcard</button></div>
+        <div class="tool-layout"><div class="panel flash-panel"><div class="panel-heading"><div><h2>Review deck</h2><p id="deckMeta">Choose a material to generate a deck.</p></div><button class="text-btn" id="shuffleCards">⇄ Shuffle</button></div><div id="flashcardStage" class="flashcard-stage"><div class="empty-state"><span>▣</span><b>Your next "I got it!" moment starts here</b><p>Generate complete Q&A deck from your library or create one manually.</p><button class="btn btn-outline" data-go="library">Open study library</button></div></div><div class="flash-controls"><button class="btn btn-outline" id="prevCard">← Previous</button><span id="cardPosition">0 / 0</span><button class="btn" id="nextCard">Next →</button></div><div class="flash-actions"><button class="soft-btn" id="markDifficult">♡ Difficult</button><button class="soft-btn" id="markKnown">✓ I know this</button><button class="soft-btn" id="exportFlashcards">⇩ Export deck</button></div></div><aside class="panel side-panel"><h2>Build a deck</h2><p>Choose one of your saved materials.</p><select id="flashMaterial"><option value="">Choose a saved material…</option></select><label>Course category<select id="flashCategory"><option value="">Choose category…</option><option value="MEDTECH">MEDTECH</option><option value="IT">IT</option></select></label><label>Subject<select id="flashSubject" disabled><option value="">Choose a category first…</option></select></label><label class="file-picker full-picker" for="flashFileInput"><span>＋</span><span><b>Choose material file</b><small>PDF, DOCX, PPTX, TXT, images and more</small></span></label><input class="visually-hidden" id="flashFileInput" type="file" accept=".pdf,.docx,.pptx,.txt,.csv,.xlsx,.jpg,.jpeg,.png,.webp"><button class="btn full" id="generateCards">Generate complete Q&A deck</button><div class="divider"></div><h3>Study tips</h3><ul class="tip-list"><li>Try answering before flipping.</li><li>Review difficult cards more often.</li><li>Shuffle to strengthen recall.</li></ul><div class="mini-count"><b id="difficultCount">0</b><span>Difficult cards</span></div></aside></div>
+      </section>
+
+      <section class="page" id="page-quizzes">
+        <div class="page-intro"><div><div class="eyebrow">PRACTICE WITH PURPOSE</div><h1>Quiz & mock exam</h1><p>Generate practice questions from your own study materials.</p></div></div>
+        <div class="panel quiz-setup" id="quizSetup"><div class="setup-heading"><span class="setup-icon">✎</span><div><h2>Build your practice test</h2><p>Questions are generated from extracted text in your library.</p></div></div><div class="form-grid"><label>Study material<select id="quizMaterial"><option value="">Choose a material…</option></select></label><label>Number of questions<input type="number" id="questionCount" value="10" min="1" max="50"></label><label>Question format<select id="questionType"><option value="mixed">Mixed question types</option><option value="mcq">Multiple choice</option><option value="tf">True or false</option><option value="identification">Identification</option><option value="fill">Fill in the blank</option><option value="enumeration">Enumeration</option></select></label><label>Mode<select id="quizMode"><option value="quiz">Quick quiz</option><option value="exam">Mock exam</option></select></label></div><button class="btn" id="startQuiz">Generate practice test →</button><p class="fine-print">Question quality depends on the clarity and structure of your source material. Review generated questions before relying on them.</p></div>
+        <div class="panel quiz-area hidden" id="quizArea"><div class="quiz-top"><span class="pill" id="quizModeLabel">PRACTICE</span><span id="quizProgress">Question 1 of 10</span><span id="quizTimer"></span></div><div class="quiz-progress"><i id="quizProgressBar"></i></div><div id="questionContent"></div><div class="quiz-nav"><button class="btn btn-outline" id="quitQuiz">Exit</button><button class="btn" id="submitAnswer">Submit answer</button><button class="btn hidden" id="nextQuestion">Next question →</button></div></div>
+        <div class="panel result-panel hidden" id="quizResult"></div>
+        <div class="panel history-panel"><div class="panel-heading"><div><h2>Practice history</h2><p>Your completed attempts on this device</p></div></div><div id="quizHistory" class="empty-state compact"><span>◷</span><b>No attempts yet</b><p>Your results will appear here.</p></div></div>
+      </section>
+
+      <section class="page" id="page-reviewers">
+        <div class="page-intro"><div><div class="eyebrow">MAKE YOUR NOTES EXAM-READY</div><h1>Reviewer generator</h1><p>Build an organized reviewer from the content you have uploaded.</p></div></div>
+        <div class="panel reviewer-setup"><div class="form-grid"><label>Source material<select id="reviewMaterial"><option value="">Choose a material…</option></select></label><label>Format<select id="reviewFormat"><option value="detailed">Detailed reviewer</option><option value="compact">Compact reviewer</option></select></label></div><div class="reviewer-generation-actions"><button class="btn" id="generateReviewer">Generate complete study package</button><span class="fine-print">Creates the Natural Reviewer, MCQ quiz, and flashcard deck from the selected source.</span></div><p class="fine-print">AI generation requires the Netlify function and an OPENAI_API_KEY environment variable. The source text remains saved locally.</p></div>
+        <div class="panel reviewer-output hidden" id="reviewerOutput"><div class="reviewer-toolbar"><input id="reviewTitle" value="Study Reviewer" aria-label="Reviewer title"><div><button class="btn btn-outline" id="saveReviewerPdf">Save as PDF</button><button class="btn" id="saveReviewer">Save to library</button></div></div><div id="reviewPaper" class="review-paper"></div><textarea id="reviewText" spellcheck="true"></textarea></div>
+      </section>
+
+      <section class="page" id="page-assistant">
+        <div class="page-intro"><div><div class="eyebrow">SEARCH YOUR OWN NOTES</div><h1>Study assistant</h1><p>A source-based helper that finds relevant passages in your saved materials.</p></div></div>
+        <div class="panel assistant-panel"><div class="assistant-intro"><span class="assistant-avatar">S</span><div><b>Your study library, at your fingertips</b><p>Ask a question. I'll look for matching passages in your saved materials.</p></div></div><div class="assistant-search"><input id="assistantQuestion" placeholder="e.g. What is the function of the cell membrane?"><button class="btn" id="askAssistant">Find answer</button></div><div id="assistantAnswer" class="assistant-answer"><div class="empty-state compact"><span>⌕</span><b>What are you studying today?</b><p>Answers are limited to the content you have saved here.</p></div></div></div>
+      </section>
+
+      <section class="page" id="page-planner">
+        <div class="page-intro"><div><div class="eyebrow">MAKE TIME FOR WHAT MATTERS</div><h1>Study planner</h1><p>Set a goal, schedule a session, and keep your momentum.</p></div><button class="btn" id="addSession">＋ Add session</button></div>
+        <div class="planner-layout"><article class="panel"><div class="panel-heading"><div><h2>Your schedule</h2><p>Upcoming and completed sessions</p></div></div><div id="sessionList" class="session-list"><div class="empty-state"><span>▦</span><b>Your planner is clear</b><p>Add your first study session.</p></div></div></article><aside class="panel goal-panel"><h2>Daily study goal</h2><p>Set a target for focused study time.</p><label>Goal (minutes)<input type="number" id="dailyGoal" min="10" max="1440" value="120"></label><button class="btn full" id="saveGoal">Save goal</button><div class="goal-progress"><div><strong id="goalMinutes">0</strong><span> / <span id="goalTarget">120</span> min completed</span></div><div class="bar"><i id="goalBar"></i></div></div></aside></div>
+      </section>
+
+      <section class="page" id="page-subjects">
+        <div class="page-intro"><div><div class="eyebrow">ORGANIZE YOUR LEARNING</div><h1>Subjects</h1><p>Keep related materials and practice in one place.</p></div><button class="btn" id="addSubject">＋ Add subject</button></div>
+        <div class="subject-grid" id="subjectGrid"></div>
+      </section>
+      <footer>Made for your next big breakthrough <span>♡</span> <small>Study materials are stored locally in this browser; AI generation runs through the secure Netlify function.</small></footer>
+    </main>
+  </div>
+
+  <div class="modal-backdrop hidden" id="modalBackdrop"><div class="modal" role="dialog" aria-modal="true"><div class="modal-head"><h2 id="modalTitle">Add details</h2><button class="icon-btn" id="closeModal">×</button></div><div id="modalBody"></div></div></div>
+  <div class="toast" id="toast"></div>
+  <input type="file" id="hiddenImport" accept=".json" hidden>
+</body>
+</html>
